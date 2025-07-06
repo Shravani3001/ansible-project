@@ -76,6 +76,11 @@ Once executed, the Apache server gets installed, and you can test it in your bro
 - ✅ **Public IP of the Ansible Controller** (for SSH from your local machine)
 - ✅ **Private IP of the Target Node** (for Ansible SSH from controller)
 - ✅ **Public IP of the Target Node** (for browser access to test Nginx page)
+- ✅ **Generate SSH Key Pair**
+  ➡️ Run:
+  ```bash
+  ssh-keygen -t rsa -b 4096 -f monitoring-key
+  ``` 
 
 ### ✅ 1. Clone the Repo
 
