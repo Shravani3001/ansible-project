@@ -21,7 +21,7 @@ This project demonstrates how to provision infrastructure on AWS using **Terrafo
 
 ## Project Structure
 
-```
+```bash
 project-folder/
 ├── main.tf
 ├── variables.tf
@@ -76,11 +76,6 @@ Once executed, the Apache server gets installed, and you can test it in your bro
 - ✅ **Public IP of the Ansible Controller** (for SSH from your local machine)
 - ✅ **Private IP of the Target Node** (for Ansible SSH from controller)
 - ✅ **Public IP of the Target Node** (for browser access to test Nginx page)
-- ✅ **Generate SSH Key Pair**
-  ➡️ Run:
-  ```bash
-  ssh-keygen -t rsa -b 4096 -f monitoring-key
-  ``` 
 
 ### ✅ 1. Clone the Repo
 
@@ -89,17 +84,20 @@ git clone https://github.com/Shravani3001/ansible-project.git
 cd ansible-project
 ```
 ### ✅ 2. Generate SSH Key Pair
+
 ```bash
 ssh-keygen -t rsa -b 4096 -f ansible-key
 ```
-This generates monitoring-key and monitoring-key.pub
 
+This generates monitoring-key and monitoring-key.pub
 ### ✅ 3. Deploy Infrastructure
+
 ```bash
 terraform init
 terraform apply
 ```
 ### ✅ 4. SSH into Ansible Controller & Install Ansible
+
 ```bash
 ssh -i ./ansible-key ubuntu@<controller_public_ip>
 ```
@@ -124,12 +122,14 @@ On controller: Now SSH into ansible-controller instance and run the following co
 chmod 400 ansible-key
 ```
 ### ✅ 7. Test SSH from Controller → Target Node
+
 ```bash
 ssh -i ansible-key ubuntu@<target_private_ip>
 ```
 ✅ If successful, you're ready for Ansible.
 
 ### ✅ 8. Setup Ansible Project Structure
+
 ```bash
 mkdir ansible-nginx-setup
 cd ansible-nginx-setup
@@ -138,11 +138,13 @@ mkdir files
 ```
 
 ### ✅ 9. Create Ansible Inventory File (inventory.ini) using nano inventory.ini command 
+
 ```bash
 [webservers]
 target ansible_host=<target_private_ip> ansible_user=ubuntu ansible_ssh_private_key_file=~/ansible-key
 ```
 ### ✅ 10. Create Ansible Playbook (playbook.yml) using nano playbook.yml command 
+
 ```bash
 ---
 - name: Install and configure Nginx on target node
@@ -172,17 +174,20 @@ target ansible_host=<target_private_ip> ansible_user=ubuntu ansible_ssh_private_
 ```
 
 ### ✅ 11. Add HTML File (files/index.html)
+
 ```bash
 <h1>Hello from Ansible</h1>
 ```
 
 ### ✅ 12. Run the Playbook
+
 ```bash
 ansible-playbook -i inventory.ini playbook.yml
 ```
 **Verify Output**
 
 Open your target EC2’s public IP in a browser:
+
 ```bash
 http://<target_public_ip>
 ```
@@ -191,6 +196,7 @@ http://<target_public_ip>
 **Destroy Infrastructure**
 
 To clean everything up:
+
 ```bash
 terraform destroy
 ```
