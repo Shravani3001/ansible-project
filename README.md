@@ -89,7 +89,7 @@ cd ansible-project
 ssh-keygen -t rsa -b 4096 -f ansible-key
 ```
 
-This generates monitoring-key and monitoring-key.pub
+This generates ansible-key and ansible-key.pub
 ### ✅ 3. Deploy Infrastructure
 
 ```bash
