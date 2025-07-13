@@ -4,8 +4,8 @@
 
 This project demonstrates how to provision infrastructure on AWS using **Terraform** and configure a web server using **Ansible**, just like a real-world DevOps setup. It deploys two EC2 instances:
 
-- **Ansible Controller EC2 (Ubuntu)**: Runs Ansible commands.
-- **Target EC2 (Ubuntu)**: Gets configured remotely to install and run Nginx, serving a custom HTML page.
+- **Ansible Controller EC2 (Ubuntu)**: executes Ansible playbooks.
+- **Target EC2 (Ubuntu)**: receives automated setup: Nginx installed and a custom HTML page served.
 
 ---
 
@@ -71,29 +71,20 @@ Start and enable the Nginx service
 
 ## Features
 
-Here are the key features of this Ansible + Terraform project:
+- **✅ Infrastructure as Code with Terraform**
+Provision VPC, Subnets, EC2 Instances, Security Groups using Terraform
 
-✅ Infrastructure as Code with Terraform
-Automates the provisioning of AWS resources like VPC, Subnet, EC2 instances, and Security Groups.
+- **✅ Key-Based SSH Access**
+Automate secure communication between controller and target via SSH key pair
 
-✅ Configuration Management with Ansible
-Remotely installs and configures the Nginx web server on the target EC2 using a playbook.
+- **✅ Modular & Organized Project Structure**
+Separates Terraform and Ansible logic for better maintainability
 
-✅ Key-Based SSH Access
-Uses an SSH key pair for secure and automated connection between controller and target nodes.
+- **✅ Custom HTML Page Deployment**
+Automatically deploy a user-defined `index.html` via Ansible
 
-✅ Modular Project Structure
-Keeps Terraform and Ansible code separate and organized.
-
-✅ Custom HTML Page Deployment
-Delivers a pre-defined index.html file to /var/www/html via Ansible.
-
-✅ Browser-Accessible Web Server
-Access the deployed Nginx web page using the public IP of the target EC2.
-
-✅ Easy Teardown
-One command (terraform destroy) cleans up all resources when the demo is done.
-
+- **✅ Easy Teardown**
+Use `terraform destroy` to tear down the full stack in one step
 ---
 
 ## Architecture Diagram
@@ -271,13 +262,14 @@ ansible-playbook -i inventory.ini playbook.yml
 **Verify Output**
 
 Open your target EC2’s public IP in a browser:
-
 ```bash
 http://<target_public_ip>
 ```
 ✅ You should see your custom HTML page served via Nginx!
 
+<img width="1759" height="959" alt="ansible-nginx-output" src="https://github.com/user-attachments/assets/ed6bb55b-7fa1-4507-9d8a-8e56349c1ee1" />
 
+---
 
 **Destroy Infrastructure**
 
@@ -291,5 +283,11 @@ terraform destroy
 
 ## About Me
 
-I'm Shravani — a self-taught DevOps engineer passionate about solving real-world problems through hands-on projects.  
-I focus on building scalable infrastructure, automating workflows, and continuously learning to stay ahead in DevOps.
+I'm **Shravani**, a self-taught and project-driven DevOps engineer passionate about building scalable infrastructure and automating complex workflows.
+
+I love solving real-world problems with tools like Terraform, Ansible, Docker, Jenkins, and AWS — and I’m always learning something new to sharpen my edge in DevOps.
+
+**Connect with me:**
+
+- LinkedIn:  www.linkedin.com/in/shravani3001
+- GitHub:  https://github.com/Shravani3001
