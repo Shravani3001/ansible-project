@@ -1,4 +1,4 @@
-# Ansible + Terraform Project: Automated Nginx Deployment on AWS
+# Automated Nginx Deployment on AWS using Ansible + Terraform
 
 ## Project Overview
 
@@ -31,33 +31,116 @@ project-folder/
 │ ├── playbook.yml
 │ └── files/
 │ └── index.html
+├── .gitignore
 └── README.md
 ```
 
-### Project Overview:
+### How It Works
 
-This project demonstrates how to automate software installation and configuration on remote EC2 servers using Ansible, just like DevOps engineers do in real-world infrastructure automation tasks.
+**Infrastructure Setup (Terraform)**
 
-We provision two EC2 instances using Terraform:
+Terraform provisions two EC2 instances in a single public subnet:
 
-Ansible Controller (Public Instance):
-This server has Ansible installed and acts as the control node.
-It connects to other servers via SSH and executes automation tasks.
+**ansible_controller:** Accessible via public IP, used to run Ansible commands.
 
-Target Node (Public Instance):
-This is the remote machine where software is installed automatically using Ansible (in our case, Apache Web Server).
+**target_node:** Accessible via public IP (for demo purposes), used as the Ansible target.
 
-### How it works together:
+**Terraform also:**
 
-You write a Playbook (YAML file) on the controller instance that defines:
+Creates a VPC, Subnet, Internet Gateway, and Security Groups.
 
-Which hosts to connect to (via inventory)
+Generates key pairs for SSH access.
 
-What tasks to perform (e.g., install Apache, enable and start the service)
+Outputs relevant IP addresses.
 
-The controller SSHs into the target node using a private key and runs the playbook.
+**Configuration Automation (Ansible)**
 
-Once executed, the Apache server gets installed, and you can test it in your browser using the target node’s public IP.
+On the Ansible Controller:
+
+We define an inventory file that points to the Target node.
+
+An Ansible playbook is executed to:
+
+Install Nginx
+
+Copy a custom HTML file
+
+Start and enable the Nginx service
+
+---
+
+## Features
+
+Here are the key features of this Ansible + Terraform project:
+
+✅ Infrastructure as Code with Terraform
+Automates the provisioning of AWS resources like VPC, Subnet, EC2 instances, and Security Groups.
+
+✅ Configuration Management with Ansible
+Remotely installs and configures the Nginx web server on the target EC2 using a playbook.
+
+✅ Key-Based SSH Access
+Uses an SSH key pair for secure and automated connection between controller and target nodes.
+
+✅ Modular Project Structure
+Keeps Terraform and Ansible code separate and organized.
+
+✅ Custom HTML Page Deployment
+Delivers a pre-defined index.html file to /var/www/html via Ansible.
+
+✅ Browser-Accessible Web Server
+Access the deployed Nginx web page using the public IP of the target EC2.
+
+✅ Easy Teardown
+One command (terraform destroy) cleans up all resources when the demo is done.
+
+---
+
+## Architecture Diagram
+
+Here’s a simple diagram that illustrates how components interact:
+```bash
+
+         +-------------------+                            +---------------------+
+         |  Your Local Machine|                            | AWS Cloud           |
+         +-------------------+                            +---------------------+
+                  |                                               |
+      Generate SSH Keys & Terraform Apply                         |
+                  |                                               |
+                  |---------------------------------------------->|
+                  |                                               |
+         Provisions VPC, Subnet, 2 EC2s, SGs                      |
+                  |                                               |
+        <------------------- Public IPs --------------------------|
+                  |
+         SSH into Ansible Controller EC2
+                  |
+         +---------------------------+
+         | Ansible Controller EC2    |
+         | (Public IP)               |
+         |---------------------------| 
+         | ✅ Install Ansible         |
+         | ✅ Copy private key here   |
+         | ✅ Write inventory.ini     |
+         | ✅ Write playbook.yml      |
+         |---------------------------|
+         | Run ansible-playbook ----> SSH to Target EC2
+         +---------------------------+        |
+                                              |
+                                              v
+                          +-------------------------+
+                          |     Target EC2          |
+                          |-------------------------|
+                          | - Nginx Installed       |
+                          | - index.html Copied     |
+                          | - Nginx Started         |
+                          +-------------------------+
+
+                  |
+     Open browser to http://<Target Public IP>
+                  |
+         View: "Hello from Ansible!"
+```
 
 ---
 
@@ -90,6 +173,7 @@ ssh-keygen -t rsa -b 4096 -f ansible-key
 ```
 
 This generates ansible-key and ansible-key.pub
+
 ### ✅ 3. Deploy Infrastructure
 
 ```bash
@@ -116,7 +200,7 @@ From your local machine: Run the following command in your project folder (ansib
 ```bash
 scp -i ansible-key ansible-key ubuntu@<controller_public_ip>:/home/ubuntu/
 ```
-On controller: Now SSH into ansible-controller instance and run the following command 
+**On controller:** Now SSH into ansible-controller instance and run the following command 
 
 ```bash
 chmod 400 ansible-key
@@ -137,13 +221,13 @@ touch inventory.ini playbook.yml
 mkdir files
 ```
 
-### ✅ 9. Create Ansible Inventory File (inventory.ini) using nano inventory.ini command 
+### ✅ 9. Create Ansible Inventory File (inventory.ini) using nano inventory.ini command in the ansible-nginx-setup folder
 
 ```bash
 [webservers]
 target ansible_host=<target_private_ip> ansible_user=ubuntu ansible_ssh_private_key_file=~/ansible-key
 ```
-### ✅ 10. Create Ansible Playbook (playbook.yml) using nano playbook.yml command 
+### ✅ 10. Create Ansible Playbook (playbook.yml) using nano playbook.yml command in the ansible-nginx-setup folder
 
 ```bash
 ---
@@ -173,13 +257,13 @@ target ansible_host=<target_private_ip> ansible_user=ubuntu ansible_ssh_private_
         enabled: yes
 ```
 
-### ✅ 11. Add HTML File (files/index.html)
+### ✅ 11. Add HTML File (ansible-nginx-setup/files/index.html)
 
 ```bash
 <h1>Hello from Ansible</h1>
 ```
 
-### ✅ 12. Run the Playbook
+### ✅ 12. Run the Playbook in the ansible-nginx-setup folder
 
 ```bash
 ansible-playbook -i inventory.ini playbook.yml
@@ -193,6 +277,8 @@ http://<target_public_ip>
 ```
 ✅ You should see your custom HTML page served via Nginx!
 
+
+
 **Destroy Infrastructure**
 
 To clean everything up:
@@ -203,8 +289,7 @@ terraform destroy
 
 ---
 
-## Author
+## About Me
 
-**Shravani K**  
-Aspiring DevOps Learner  
-LinkedIn: www.linkedin.com/in/shravani-k-25953828a
+I'm Shravani — a self-taught DevOps engineer passionate about solving real-world problems through hands-on projects.  
+I focus on building scalable infrastructure, automating workflows, and continuously learning to stay ahead in DevOps.
